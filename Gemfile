@@ -9,5 +9,6 @@ gem 'turbolinks',           '2.3.0'
 gem 'jbuilder',             '2.2.3'
 gem 'rails-html-sanitizer', '1.0.1'
 gem 'sdoc',                 '0.4.0', group: :doc
+gem 'haml-rails',           '>= 0.3.4'
 
 gem 'mongoid',                       git: 'https://github.com/mongoid/mongoid.git'
