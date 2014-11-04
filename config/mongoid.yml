@@ -1,6 +1,6 @@
 development:
   sessions:
-    default:
+    default:	
       database: sample_app2
       hosts:
         - localhost:27017
