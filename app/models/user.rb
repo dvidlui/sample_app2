@@ -7,6 +7,7 @@ class User
   field :created_at,        type: Date
   field :updated_at,        type: Date
   field :password_digest,   type: String
+  has_secure_password
   
   validates :name,  presence: true, length: { maximum: 50 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -15,6 +16,5 @@ class User
                       uniqueness: true
                       
   index({ email: 1 }, { unique: true, name: "users_email_index" })
-  has_secure_password
   validates :password, length: { minimum: 6 }
 end
