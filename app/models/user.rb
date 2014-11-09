@@ -9,6 +9,7 @@ class User
   field :updated_at,        type: Date
   field :password_digest,   type: String
 	field :remember_digest,		type: String
+	field :admin,							type: Boolean
   has_secure_password
   
   validates :name,  presence: true, length: { maximum: 50 }
