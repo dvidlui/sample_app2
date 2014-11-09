@@ -1,3 +1,53 @@
 // Place all the styles related to the StaticPages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+@import "base/global.css.scss";
+@import "base/mixins.css.scss";
+
+/* header */
+
+#logo {
+  float: left;
+  margin-right: 10px;
+  font-size: 1.7em;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  padding-top: 9px;
+  font-weight: bold;
+  
+  &:hover{
+	  color: white;
+	  text-decoration: none;
+  };
+}
+
+/* footer */
+
+footer {
+  margin-top: 45px;
+  padding-top: 5px;
+  border-top: 1px solid #eaeaea;
+  color: #777;
+  
+  a {
+	  color: $gray;
+	  &:hover{
+		  color:$gray-darker;
+	  };
+  }
+  
+  small {
+	  float: left;
+  }
+  
+  ul {
+	  float: right;
+	  list-style: none;
+	  li {
+		  float: left;
+		  margin-left: 15px;
+	  }
+  }
+}
