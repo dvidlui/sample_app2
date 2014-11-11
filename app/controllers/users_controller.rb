@@ -9,6 +9,7 @@ class UsersController < ApplicationController
 	
 	def show
 		@user = User.find(params[:id])
+		@microposts = @user.microposts.paginate(params[:page])
 	end
 	
   def new
@@ -24,7 +25,7 @@ class UsersController < ApplicationController
 			
 			# In case of account activation
 			@user.send_activation_email
-			flash[:info] = "Pleaxe check your email to activate your account."
+			flash[:info] = "Please check your email to activate your account."
 			redirect_to root_url
 		else
 			render 'new'
@@ -59,13 +60,6 @@ class UsersController < ApplicationController
     end	
 		
 		# Before filters
-		def logged_in_user
-			unless logged_in?
-				store_location
-				flash[:danger] = "Please log in."
-				redirect_to login_url
-			end			
-		end
 		
 		def correct_user
 			@user = User.find(params[:id])
