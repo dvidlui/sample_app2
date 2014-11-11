@@ -4,30 +4,32 @@ class User
   include ActiveModel::SecurePassword
   include Mongoid::Document
 	include Mongoid::Timestamps
+	
+	has_many :microposts, dependent: :delete
+	
 	before_save   :downcase_email
 	before_create :create_activation_digest
-  field :name,              type: String
+  
+	field :name,              type: String
   field :email,             type: String
-  field :created_at,        type: Date
-  field :updated_at,        type: Date
   field :password_digest,   type: String
 	field :remember_digest,		type: String
 	field :admin,							type: Boolean
 	field :activation_digest, type: String
 	field :activated,					type: Boolean, default: false
-	field :activated_at,			type: Date
+	field :activated_at,			type: DateTime
 	field :reset_digest,			type: String
 	field :reset_sent_at, 		type: DateTime
   has_secure_password
-  
+	
+  index({ email: 1 }, { unique: true, name: "users_email_index" })
+	
+  validates :password, length: { minimum: 6 }
   validates :name,  presence: true, length: { maximum: 50 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, length: { maximum: 255 },
                       format: { with: VALID_EMAIL_REGEX },
                       uniqueness: true
-                      
-  index({ email: 1 }, { unique: true, name: "users_email_index" })
-  validates :password, length: { minimum: 6 }
 	
 	# Returns the hash digest of the given string
 	def User.digest(string)
@@ -87,7 +89,12 @@ class User
 		reset_sent_at < 2.hours.ago
 	end
 	
-	private
+	def feed
+		# This is preliminary. See "Following users" for the full implementation.
+		Micropost.where(user_id: _id)
+	end
+	
+		private
 		# Converts email to all lower-case
 		def downcase_email
 			self.email = email.downcase
