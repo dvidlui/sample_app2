@@ -15,6 +15,12 @@ class Micropost
 	validates :user_id, presence: true
 	validates :content, presence: true, length: { maximum: 140 }
 	validate  :picture_size
+
+	# Returns microposts from the users being followed by the given user
+	def Micropost.from_users_followed_by(user)
+		following_ids = user.following
+		any_of({user_id: user._id}, {:user_id.in => following_ids})
+	end
 	
 	private
 		def picture_size

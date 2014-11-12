@@ -6,6 +6,16 @@ class User
 	include Mongoid::Timestamps
 	
 	has_many :microposts, dependent: :delete
+	has_many :active_relationships,  class_name: 		"Relationship",
+																	 foreign_key: 	"follower_id",
+																	 inverse_of: 		:follower,
+																	 dependent: 		:delete
+	has_many :passive_relationships, class_name: 		"Relationship",
+																	 foreign_key: 	"followed_id",
+																	 inverse_of: 		:followed,
+																	 dependent: 		:delete
+	# has_many :following, through: :active_relationships,  source: :followed
+	# has_many :followers, through: :passive_relationships, source: :follower
 	
 	before_save   :downcase_email
 	before_create :create_activation_digest
@@ -91,8 +101,33 @@ class User
 	
 	def feed
 		# This is preliminary. See "Following users" for the full implementation.
-		Micropost.where(user_id: _id)
+		Micropost.from_users_followed_by(self)
 	end
+	
+	# Follows a user
+	def follow(other_user)
+		active_relationships.create(followed_id: other_user._id)
+	end
+	
+	# Unfollows a user
+	def unfollow(other_user)
+		active_relationships.find_by(followed_id: other_user._id).delete
+	end
+	
+	# Returns users followed by current user
+	def following
+		Relationship.where(follower_id: _id).pluck(:followed)
+	end
+	
+	# Returns users following current user
+	def followers
+		Relationship.where(followed_id: _id).pluck(:follower)
+	end
+	
+	# Returns true if the current user is following the other user.
+	def following?(other_user)
+		return true if active_relationships.find_by(followed_id: other_user._id)
+ 	end
 	
 		private
 		# Converts email to all lower-case
